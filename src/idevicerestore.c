@@ -1033,6 +1033,11 @@ int idevicerestore_start(struct idevicerestore_client_t* client)
 	}
 
 	idevicerestore_progress(client, RESTORE_STEP_PREPARE, 0.2);
+	if (client->mode == MODE_RESTORE) {
+		if (client->flags & FLAG_ALLOW_RESTORE_MODE) {
+			tss_enabled = 0;
+		}
+	}
 
 	/* retrieve shsh blobs if required */
 	if (tss_enabled) {
