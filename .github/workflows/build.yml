@@ -61,10 +61,10 @@ jobs:
       with:
         fetch-depth: 0
     - name: autogen
-      run: ./autogen.sh PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+      run: ./autogen.sh PKG_CONFIG_PATH=/usr/local/lib/pkgconfig LDFLAGS="-static" --disable-shared --enable-static
     - name: make
-      run: make
-    - name: make install
+      run: make -j$(nproc)
+    - name: make -j$(nproc) install
       run: sudo make install
     - name: prepare artifact
       run: |
@@ -173,9 +173,9 @@ jobs:
               zlib_CFLAGS="-I${{env.SDKDIR}}/usr/include" zlib_LIBS="-lz" \
               libimobiledevice_CFLAGS="-I/usr/local/include" libimobiledevice_LIBS="-L/usr/local/lib -lusbmuxd-2.0 -limobiledevice-glue-1.0 -limobiledevice-1.0"
     - name: make
-      run: make
+      run: make -j$(sysctl -n hw.ncpu)
     - name: make install
-      run: sudo make install
+      run: sudo make -j$(sysctl -n hw.ncpu) install
     - name: prepare artifact
       run: |
           mkdir -p dest
